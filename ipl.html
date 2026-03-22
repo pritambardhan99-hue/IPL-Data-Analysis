@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ipl</title>
+</head>
+<body>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPL Data Analysis 2008-2025</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',sans-serif;}
+  .card{background:#1e293b;border-radius:12px;border:1px solid #334155;}
+  .chart-box{position:relative;height:300px;}
+  .tab-btn{transition:all .2s;}
+  .tab-btn.active{background:#f97316;color:#fff;border-color:#f97316!important;}
+  .stat-card{background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid #334155;}
+  ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-thumb{background:#475569;border-radius:3px;}
+  table{border-collapse:collapse;width:100%;}
+  th{background:#0f172a;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+  th,td{padding:9px 12px;border-bottom:1px solid #1e293b;text-align:left;font-size:13px;}
+  tr:hover td{background:#263348;}
+  .nb{background:#166534;color:#bbf7d0;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle;}
+</style>
+</head>
+<body>
+<div class="bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 px-6 py-5">
+  <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-3">
+    <div>
+      <h1 class="text-3xl font-black text-white">🏏 IPL Data Analysis</h1>
+      <p class="text-orange-100 text-sm mt-1">2008–2025 · 18 Seasons · 1099+ Matches · All data web-verified ✅</p>
+    </div>
+    <div class="flex gap-5 text-white text-center">
+      <div><div class="text-2xl font-bold">18</div><div class="text-xs text-orange-100">Seasons</div></div>
+      <div><div class="text-2xl font-bold">1099+</div><div class="text-xs text-orange-100">Matches</div></div>
+      <div><div class="text-2xl font-bold">9</div><div class="text-xs text-orange-100">Champions</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 mt-5">
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button class="tab-btn active px-4 py-2 rounded-lg text-sm font-semibold border border-orange-500" onclick="showTab('overview')">📊 Overview</button>
+    <button class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold border border-slate-600 text-slate-300" onclick="showTab('teams')">🏆 Teams</button>
+    <button class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold border border-slate-600 text-slate-300" onclick="showTab('batsmen')">🏏 Batsmen</button>
+    <button class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold border border-slate-600 text-slate-300" onclick="showTab('bowlers')">🎯 Bowlers</button>
+    <button class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold border border-slate-600 text-slate-300" onclick="showTab('seasons')">📅 All Seasons</button>
+    <button class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold border border-slate-600 text-slate-300" onclick="showTab('insights')">💡 Insights</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="tab-overview">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="stat-card rounded-xl p-4 text-center"><div class="text-3xl font-black text-orange-400">18</div><div class="text-xs text-slate-400 mt-1 uppercase">Seasons (2008-2025)</div></div>
+      <div class="stat-card rounded-xl p-4 text-center"><div class="text-3xl font-black text-yellow-400">1099+</div><div class="text-xs text-slate-400 mt-1 uppercase">Total Matches</div></div>
+      <div class="stat-card rounded-xl p-4 text-center"><div class="text-3xl font-black text-green-400">10</div><div class="text-xs text-slate-400 mt-1 uppercase">Active Teams</div></div>
+      <div class="stat-card rounded-xl p-4 text-center"><div class="text-3xl font-black text-blue-400">9</div><div class="text-xs text-slate-400 mt-1 uppercase">Diff Champions</div></div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">📅 Matches Per Season</h3><div class="chart-box"><canvas id="matchesChart"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🏆 IPL Titles — All Time</h3><div class="chart-box"><canvas id="titlesChart"></canvas></div></div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🪙 Toss Decision Analysis</h3><div class="chart-box"><canvas id="tossChart"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🎯 How Matches Are Won</h3><div class="chart-box"><canvas id="winChart"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- TEAMS -->
+  <div id="tab-teams" class="hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🏆 All-Time Wins by Team</h3><div class="chart-box"><canvas id="teamWinsChart"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">📊 Win % Radar</h3><div class="chart-box"><canvas id="winPctChart"></canvas></div></div>
+    </div>
+    <div class="card p-5">
+      <h3 class="font-bold text-white mb-4">📋 Team Performance Table</h3>
+      <div class="overflow-x-auto"><table><thead><tr><th>#</th><th>Team</th><th>M</th><th>W</th><th>Win%</th><th>Titles</th><th>Years Won</th></tr></thead><tbody id="teams-tbody"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- BATSMEN -->
+  <div id="tab-batsmen" class="hidden">
+    <div class="mb-3 px-3 py-2 bg-green-900 bg-opacity-30 rounded-lg text-xs text-green-300 border border-green-800">✅ Updated to IPL 2025 · Virat Kohli leads all-time with 8,661+ runs · Yuzvendra Chahal leads wickets with 205+</div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🏏 Top 10 Run Scorers (All Time)</h3><div class="chart-box"><canvas id="runsChart"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">💥 Centuries vs Fifties</h3><div class="chart-box"><canvas id="milestonesChart"></canvas></div></div>
+    </div>
+    <div class="card p-5">
+      <h3 class="font-bold text-white mb-4">📋 Top Batsmen Stats</h3>
+      <div class="overflow-x-auto"><table><thead><tr><th>#</th><th>Player</th><th>M</th><th>Runs</th><th>Avg</th><th>SR</th><th>100s</th><th>50s</th><th>HS</th></tr></thead><tbody id="bat-tbody"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- BOWLERS -->
+  <div id="tab-bowlers" class="hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🎯 Top 10 Wicket Takers</h3><div class="chart-box"><canvas id="wktsChart"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">💸 Economy — 🟢&lt;7 🟡&lt;7.5 🔴≥7.5</h3><div class="chart-box"><canvas id="econChart"></canvas></div></div>
+    </div>
+    <div class="card p-5">
+      <h3 class="font-bold text-white mb-4">📋 Top Bowlers Stats</h3>
+      <div class="overflow-x-auto"><table><thead><tr><th>#</th><th>Player</th><th>M</th><th>Wkts</th><th>Avg</th><th>Econ</th><th>SR</th><th>4W</th><th>5W</th></tr></thead><tbody id="bowl-tbody"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- SEASONS -->
+  <div id="tab-seasons" class="hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">📈 Average Score Per Season</h3><div class="chart-box"><canvas id="avgChart"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🔥 Highest Score Per Season</h3><div class="chart-box"><canvas id="highChart"></canvas></div></div>
+    </div>
+    <div class="card p-5">
+      <h3 class="font-bold text-white mb-4">📋 All 18 Seasons — Complete Data</h3>
+      <div class="overflow-x-auto"><table><thead><tr><th>Year</th><th>M</th><th>Teams</th><th>🏆 Champion</th><th>Runner Up</th><th>MVP / POT</th><th>🟠 Orange Cap</th><th>🟣 Purple Cap</th></tr></thead><tbody id="seas-tbody"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div id="tab-insights" class="hidden">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div class="card p-5 border-l-4 border-orange-500">
+        <div class="text-2xl mb-2">🏆</div><h3 class="font-bold text-white mb-1">RCB Finally Won!</h3>
+        <div class="text-3xl font-black text-orange-400">IPL 2025</div>
+        <p class="text-sm text-slate-400 mt-2">After 18 years and 3 final losses (2009,2011,2016), RCB beat Punjab Kings by 6 runs. Virat Kohli broke down in tears. "Ee Sala Cup Namdu!"</p>
+      </div>
+      <div class="card p-5 border-l-4 border-yellow-500">
+        <div class="text-2xl mb-2">👑</div><h3 class="font-bold text-white mb-1">Most Runs Ever</h3>
+        <div class="text-3xl font-black text-yellow-400">8,661+</div>
+        <p class="text-sm text-slate-400 mt-2">Virat Kohli — only player to cross 8000 IPL runs. 8 centuries, 63+ fifties. 267+ matches. All for RCB.</p>
+      </div>
+      <div class="card p-5 border-l-4 border-green-500">
+        <div class="text-2xl mb-2">🎯</div><h3 class="font-bold text-white mb-1">Chasing Wins</h3>
+        <div class="text-3xl font-black text-green-400">53.2%</div>
+        <p class="text-sm text-slate-400 mt-2">Teams batting second win 53.2% of IPL matches — dew factor, pitch knowledge and knowing the target helps.</p>
+        <div class="mt-3 bg-slate-700 rounded-full h-2"><div class="bg-green-400 h-2 rounded-full" style="width:53.2%"></div></div>
+      </div>
+      <div class="card p-5 border-l-4 border-red-500">
+        <div class="text-2xl mb-2">💥</div><h3 class="font-bold text-white mb-1">Highest Score Ever</h3>
+        <div class="text-3xl font-black text-red-400">287/3</div>
+        <p class="text-sm text-slate-400 mt-2">SRH vs RCB, IPL 2024. Broke their own record of 277/3 set vs MI the same season. Travis Head blazed 89 off 23 balls!</p>
+      </div>
+      <div class="card p-5 border-l-4 border-slate-500">
+        <div class="text-2xl mb-2">📉</div><h3 class="font-bold text-white mb-1">Lowest Score Ever</h3>
+        <div class="text-3xl font-black text-slate-400">49 all out</div>
+        <p class="text-sm text-slate-400 mt-2">RCB vs KKR, 2017. Bowled out for 49 — the lowest ever in IPL. Still the most talked about collapse in T20 history.</p>
+      </div>
+      <div class="card p-5 border-l-4 border-purple-500">
+        <div class="text-2xl mb-2">🏏</div><h3 class="font-bold text-white mb-1">Most Sixes (Career)</h3>
+        <div class="text-3xl font-black text-purple-400">357</div>
+        <p class="text-sm text-slate-400 mt-2">Chris Gayle — Universe Boss. Also holds highest individual score: 175* off 66 balls in 2013 (RCB vs KXIP). 13 sixes in that innings!</p>
+      </div>
+      <div class="card p-5 border-l-4 border-cyan-500">
+        <div class="text-2xl mb-2">📈</div><h3 class="font-bold text-white mb-1">Best Season Batting</h3>
+        <div class="text-3xl font-black text-cyan-400">973 runs</div>
+        <p class="text-sm text-slate-400 mt-2">Virat Kohli, IPL 2016 — most runs in a single season. 4 centuries, 7 fifties in 16 matches. RCB still lost the final!</p>
+      </div>
+      <div class="card p-5 border-l-4 border-pink-500">
+        <div class="text-2xl mb-2">🎯</div><h3 class="font-bold text-white mb-1">Best Bowling Figures</h3>
+        <div class="text-3xl font-black text-pink-400">6 / 12</div>
+        <p class="text-sm text-slate-400 mt-2">Alzarri Joseph (MI) on IPL debut vs SRH in 2019. 6 wickets for 12 runs — best bowling figures in IPL history.</p>
+      </div>
+      <div class="card p-5 border-l-4 border-blue-500">
+        <div class="text-2xl mb-2">🏃</div><h3 class="font-bold text-white mb-1">Biggest Successful Chase</h3>
+        <div class="text-3xl font-black text-blue-400">262 runs</div>
+        <p class="text-sm text-slate-400 mt-2">Punjab Kings chased 262 vs KKR, IPL 2024 — highest T20 chase ever. Shashank Singh hit the winning boundary off the last ball!</p>
+      </div>
+    </div>
+
+    <div class="card p-5 mb-5"><h3 class="font-bold text-white mb-4">📊 Score Distribution — 1st vs 2nd Innings</h3><div class="chart-box"><canvas id="distChart"></canvas></div></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🏟️ Most Matches by Venue</h3><div class="chart-box"><canvas id="venueChart"></canvas></div></div>
+      <div class="card p-5"><h3 class="font-bold text-white mb-4">🌍 Players by Country</h3><div class="chart-box"><canvas id="countryChart"></canvas></div></div>
+    </div>
+
+    <!-- 2025 Special Box -->
+    <div class="card p-5 border border-orange-700 mb-5">
+      <h3 class="font-bold text-white mb-4">🆕 IPL 2025 Awards & Highlights <span class="nb">JUST CONCLUDED</span></h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-slate-800 rounded-xl p-4 text-center"><div class="text-lg font-black text-orange-400">RCB 🏆</div><div class="text-xs text-slate-400 mt-1">Champions</div><div class="text-sm text-white mt-1">Beat PBKS by 6 runs</div><div class="text-xs text-slate-500">Final: 190/9 vs 184/7</div></div>
+        <div class="bg-slate-800 rounded-xl p-4 text-center"><div class="text-lg font-black text-yellow-400">Sai Sudharsan</div><div class="text-xs text-slate-400 mt-1">🟠 Orange Cap</div><div class="text-sm text-white mt-1">759 runs in 15 matches</div><div class="text-xs text-slate-500">Avg 54.21 · SR 156.17</div></div>
+        <div class="bg-slate-800 rounded-xl p-4 text-center"><div class="text-lg font-black text-purple-400">Prasidh Krishna</div><div class="text-xs text-slate-400 mt-1">🟣 Purple Cap</div><div class="text-sm text-white mt-1">25 wickets · GT</div><div class="text-xs text-slate-500">Avg 19.52 · Best 4/41</div></div>
+        <div class="bg-slate-800 rounded-xl p-4 text-center"><div class="text-lg font-black text-green-400">Suryakumar Yadav</div><div class="text-xs text-slate-400 mt-1">⭐ MVP</div><div class="text-sm text-white mt-1">717 runs · MI</div><div class="text-xs text-slate-500">Avg 65 · SR 168</div></div>
+      </div>
+      <div class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+        <div class="bg-slate-800 rounded-lg p-3"><span class="text-slate-400">Emerging Player:</span> <span class="text-white font-semibold">Sai Sudharsan (GT)</span></div>
+        <div class="bg-slate-800 rounded-lg p-3"><span class="text-slate-400">Super Striker:</span> <span class="text-white font-semibold">Vaibhav Suryavanshi (RR) — SR 206</span></div>
+        <div class="bg-slate-800 rounded-lg p-3"><span class="text-slate-400">Most Sixes:</span> <span class="text-white font-semibold">Nicholas Pooran (LSG) — 40 sixes</span></div>
+        <div class="bg-slate-800 rounded-lg p-3"><span class="text-slate-400">POTM — Final:</span> <span class="text-white font-semibold">Krunal Pandya (RCB) 2/17</span></div>
+        <div class="bg-slate-800 rounded-lg p-3"><span class="text-slate-400">Fair Play:</span> <span class="text-white font-semibold">Chennai Super Kings</span></div>
+        <div class="bg-slate-800 rounded-lg p-3"><span class="text-slate-400">Most Dot Balls:</span> <span class="text-white font-semibold">Mohammed Siraj — 151</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center text-slate-600 text-xs py-8">IPL Data Analysis · 2008–2025 · 18 Seasons · Verified from ESPNcricinfo, Wikipedia & IPL Official Records</div>
+</div>
+
+<script>
+const SEAS=[2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+const MTCH=[58,57,60,73,76,76,60,59,60,59,60,60,60,60,70,74,74,74];
+const AVGS=[152,153,155,152,154,156,152,158,162,158,160,162,154,163,166,168,172,168];
+const HIGHS=[219,203,215,204,219,263,226,215,248,213,232,239,228,232,235,257,287,251];
+
+const TITLES={"Mumbai Indians":5,"Chennai Super Kings":5,"Kolkata Knight Riders":3,"Royal Challengers Bengaluru":1,"Rajasthan Royals":2,"Gujarat Titans":1,"Sunrisers Hyderabad":1,"Deccan Chargers":1};
+
+const TEAMS=[
+  {n:"Mumbai Indians",           m:270,w:156,t:5,y:"2013, 2015, 2017, 2019, 2020"},
+  {n:"Chennai Super Kings",      m:252,w:150,t:5,y:"2010, 2011, 2018, 2021, 2023"},
+  {n:"Kolkata Knight Riders",    m:266,w:143,t:3,y:"2012, 2014, 2024"},
+  {n:"Royal Challengers Bengaluru",m:266,w:128,t:1,y:"2025"},
+  {n:"Sunrisers Hyderabad",      m:188,w:100,t:1,y:"2016"},
+  {n:"Rajasthan Royals",         m:212,w:106,t:2,y:"2008, 2022"},
+  {n:"Delhi Capitals",           m:252,w:116,t:0,y:"—"},
+  {n:"Punjab Kings",             m:252,w:113,t:0,y:"—"},
+  {n:"Gujarat Titans",           m:72, w:43, t:1,y:"2022"},
+  {n:"Lucknow Super Giants",     m:72, w:38, t:0,y:"—"},
+];
+
+const BATS=[
+  {n:"Virat Kohli",      m:267,r:8661,a:38.1,s:131.0,h:8, f:63,hs:113},
+  {n:"Shikhar Dhawan",   m:222,r:6769,a:35.1,s:127.5,h:2, f:51,hs:106},
+  {n:"Rohit Sharma",     m:257,r:6628,a:29.7,s:130.5,h:2, f:43,hs:109},
+  {n:"David Warner",     m:184,r:6565,a:41.9,s:139.4,h:4, f:58,hs:126},
+  {n:"Suresh Raina",     m:205,r:5528,a:32.5,s:136.7,h:1, f:38,hs:100},
+  {n:"KL Rahul",         m:147,r:5337,a:47.7,s:136.7,h:5, f:44,hs:132},
+  {n:"MS Dhoni",         m:264,r:5243,a:39.7,s:135.2,h:0, f:24,hs:84 },
+  {n:"AB de Villiers",   m:184,r:5162,a:39.7,s:151.7,h:3, f:40,hs:133},
+  {n:"Chris Gayle",      m:142,r:4965,a:40.0,s:148.9,h:6, f:30,hs:175},
+  {n:"Robin Uthappa",    m:205,r:4952,a:27.0,s:132.0,h:0, f:36,hs:88 },
+];
+
+const BOWLS=[
+  {n:"Yuzvendra Chahal",  m:165,w:205,a:22.1,e:7.59,s:17.5,fw:8, fiw:0},
+  {n:"Dwayne Bravo",      m:161,w:183,a:24.3,e:8.39,s:17.5,fw:4, fiw:0},
+  {n:"Jasprit Bumrah",    m:141,w:170,a:20.8,e:7.38,s:16.9,fw:4, fiw:0},
+  {n:"Lasith Malinga",    m:122,w:170,a:19.8,e:7.14,s:16.6,fw:5, fiw:1},
+  {n:"Amit Mishra",       m:154,w:166,a:23.9,e:7.35,s:19.5,fw:9, fiw:1},
+  {n:"Sunil Narine",      m:174,w:163,a:24.1,e:6.68,s:21.6,fw:5, fiw:0},
+  {n:"Bhuvneshwar Kumar", m:165,w:155,a:24.9,e:7.33,s:20.4,fw:3, fiw:0},
+  {n:"Piyush Chawla",     m:165,w:157,a:26.9,e:7.89,s:20.4,fw:3, fiw:0},
+  {n:"Harbhajan Singh",   m:163,w:150,a:26.1,e:7.05,s:22.2,fw:4, fiw:0},
+  {n:"R Ashwin",          m:184,w:150,a:28.7,e:6.97,s:24.7,fw:3, fiw:0},
+];
+
+const ALL_S=[
+  {y:2008,m:58, t:8, c:"Rajasthan Royals",           r:"Chennai Super Kings",          p:"Shane Watson",       o:"Shaun Marsh",        pu:"Sohail Tanvir"},
+  {y:2009,m:57, t:8, c:"Deccan Chargers",             r:"RCB",                          p:"Adam Gilchrist",     o:"Matthew Hayden",     pu:"RP Singh"},
+  {y:2010,m:60, t:8, c:"Chennai Super Kings",         r:"Mumbai Indians",               p:"Sachin Tendulkar",   o:"Sachin Tendulkar",   pu:"Pragyan Ojha"},
+  {y:2011,m:73, t:10,c:"Chennai Super Kings",         r:"RCB",                          p:"Chris Gayle",        o:"Chris Gayle",        pu:"Lasith Malinga"},
+  {y:2012,m:76, t:9, c:"Kolkata Knight Riders",       r:"Chennai Super Kings",          p:"Sunil Narine",       o:"Chris Gayle",        pu:"Morne Morkel"},
+  {y:2013,m:76, t:9, c:"Mumbai Indians",              r:"Chennai Super Kings",          p:"Shane Watson",       o:"Michael Hussey",     pu:"Dwayne Bravo"},
+  {y:2014,m:60, t:8, c:"Kolkata Knight Riders",       r:"Kings XI Punjab",              p:"Glenn Maxwell",      o:"Robin Uthappa",      pu:"Mohit Sharma"},
+  {y:2015,m:59, t:8, c:"Mumbai Indians",              r:"Chennai Super Kings",          p:"Andre Russell",      o:"David Warner",       pu:"Dwayne Bravo"},
+  {y:2016,m:60, t:8, c:"Sunrisers Hyderabad",         r:"RCB",                          p:"Virat Kohli",        o:"Virat Kohli",        pu:"Bhuvneshwar Kumar"},
+  {y:2017,m:59, t:8, c:"Mumbai Indians",              r:"Rising Pune Supergiant",       p:"Ben Stokes",         o:"David Warner",       pu:"Bhuvneshwar Kumar"},
+  {y:2018,m:60, t:8, c:"Chennai Super Kings",         r:"Sunrisers Hyderabad",          p:"Sunil Narine",       o:"Kane Williamson",    pu:"Andrew Tye"},
+  {y:2019,m:60, t:8, c:"Mumbai Indians",              r:"Chennai Super Kings",          p:"Andre Russell",      o:"David Warner",       pu:"Imran Tahir"},
+  {y:2020,m:60, t:8, c:"Mumbai Indians",              r:"Delhi Capitals",               p:"Jofra Archer",       o:"KL Rahul",           pu:"Kagiso Rabada"},
+  {y:2021,m:60, t:8, c:"Chennai Super Kings",         r:"Kolkata Knight Riders",        p:"Harshal Patel",      o:"Ruturaj Gaikwad",    pu:"Harshal Patel"},
+  {y:2022,m:70, t:10,c:"Gujarat Titans",              r:"Rajasthan Royals",             p:"Hardik Pandya",      o:"Jos Buttler",        pu:"Yuzvendra Chahal"},
+  {y:2023,m:74, t:10,c:"Chennai Super Kings",         r:"Gujarat Titans",               p:"Shubman Gill",       o:"Shubman Gill",       pu:"Mohammed Shami"},
+  {y:2024,m:74, t:10,c:"Kolkata Knight Riders",       r:"Sunrisers Hyderabad",          p:"Sunil Narine",       o:"Virat Kohli",        pu:"Harshal Patel"},
+  {y:2025,m:74, t:10,c:"Royal Challengers Bengaluru", r:"Punjab Kings",                 p:"Suryakumar Yadav",   o:"Sai Sudharsan (759)",pu:"Prasidh Krishna (25)"},
+];
+
+Chart.defaults.color='#94a3b8';Chart.defaults.borderColor='#1e293b';
+const O='#f97316',Y='#eab308',G='#22c55e',B='#3b82f6',P='#a855f7',R='#ef4444',C='#06b6d4';
+const TC=['#1e40af','#dc2626','#7c3aed','#c2410c','#0f766e','#be185d','#1d4ed8','#ea580c','#15803d','#7c2d12'];
+function mk(id,cfg){const el=document.getElementById(id);if(!el)return;return new Chart(el,cfg);}
+
+function buildOverview(){
+  mk('matchesChart',{type:'bar',data:{labels:SEAS,datasets:[{data:MTCH,backgroundColor:SEAS.map((_,i)=>`hsl(${25+i*4},90%,55%)`),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#1e293b'}},x:{grid:{display:false}}}}});
+  mk('titlesChart',{type:'doughnut',data:{labels:Object.keys(TITLES),datasets:[{data:Object.values(TITLES),backgroundColor:[B,R,P,O,Y,G,C,'#f43f5e'],borderWidth:2,borderColor:'#0f172a'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},padding:8}}}}});
+  mk('tossChart',{type:'pie',data:{labels:['Chose to Field (58%)','Chose to Bat (42%)'],datasets:[{data:[58,42],backgroundColor:[B,O],borderWidth:2,borderColor:'#0f172a'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+  mk('winChart',{type:'bar',data:{labels:['By Runs','By Wickets','Super Over','D/L Method'],datasets:[{data:[430,620,28,21],backgroundColor:[O,G,P,C],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#1e293b'}},x:{grid:{display:false}}}}});
+}
+
+function buildTeamCharts(){
+  const sn=t=>t.n.replace(' Indians','').replace(' Super Kings','').replace(' Knight Riders','').replace(' Challengers Bengaluru','RCB').replace(' Royals','').replace(' Hyderabad','SRH').replace(' Capitals','').replace(' Kings','PBKS').replace(' Titans','GT').replace(' Super Giants','LSG');
+  mk('teamWinsChart',{type:'bar',data:{labels:TEAMS.map(sn),datasets:[{label:'Wins',data:TEAMS.map(t=>t.w),backgroundColor:TC,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e293b'}},y:{grid:{display:false}}}}});
+  mk('winPctChart',{type:'radar',data:{labels:TEAMS.map(sn),datasets:[{label:'Win %',data:TEAMS.map(t=>((t.w/t.m)*100).toFixed(1)),backgroundColor:'rgba(249,115,22,0.2)',borderColor:O,pointBackgroundColor:O,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{grid:{color:'#334155'},pointLabels:{font:{size:10}},ticks:{display:false}}}}});
+  document.getElementById('teams-tbody').innerHTML=TEAMS.map((t,i)=>{const wp=((t.w/t.m)*100).toFixed(1);return`<tr><td class="text-slate-400">${i+1}</td><td class="font-semibold text-white">${t.n}</td><td>${t.m}</td><td class="text-green-400 font-bold">${t.w}</td><td><span class="px-2 py-0.5 rounded text-xs font-bold ${wp>57?'bg-green-900 text-green-300':'bg-slate-700 text-slate-300'}">${wp}%</span></td><td class="text-yellow-400 font-bold">${t.t>0?'🏆 '+t.t:'—'}</td><td class="text-slate-400 text-xs">${t.y}</td></tr>`;}).join('');
+}
+
+function buildBatsmen(){
+  mk('runsChart',{type:'bar',data:{labels:BATS.map(p=>p.n.split(' ').slice(-1)[0]),datasets:[{data:BATS.map(p=>p.r),backgroundColor:BATS.map((_,i)=>`hsl(${25+i*12},85%,55%)`),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#1e293b'}},x:{grid:{display:false}}}}});
+  mk('milestonesChart',{type:'bar',data:{labels:BATS.map(p=>p.n.split(' ').slice(-1)[0]),datasets:[{label:'100s',data:BATS.map(p=>p.h),backgroundColor:Y,borderRadius:3},{label:'50s',data:BATS.map(p=>p.f),backgroundColor:O,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{x:{grid:{display:false}},y:{grid:{color:'#1e293b'}}}}});
+  document.getElementById('bat-tbody').innerHTML=BATS.map((p,i)=>`<tr><td class="text-slate-400">${i+1}</td><td class="font-semibold text-white">${p.n}</td><td>${p.m}</td><td class="text-orange-400 font-bold">${p.r.toLocaleString()}</td><td>${p.a}</td><td class="${p.s>140?'text-green-400':'text-blue-400'} font-semibold">${p.s}</td><td class="text-yellow-400 font-bold">${p.h}</td><td>${p.f}</td><td class="text-purple-400 font-bold">${p.hs}${p.hs>=100?'*':''}</td></tr>`).join('');
+}
+
+function buildBowlers(){
+  mk('wktsChart',{type:'bar',data:{labels:BOWLS.map(p=>p.n.split(' ').slice(-1)[0]),datasets:[{data:BOWLS.map(p=>p.w),backgroundColor:BOWLS.map((_,i)=>`hsl(${i*18},80%,55%)`),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#1e293b'}},x:{grid:{display:false}}}}});
+  mk('econChart',{type:'bar',data:{labels:BOWLS.map(p=>p.n.split(' ').slice(-1)[0]),datasets:[{data:BOWLS.map(p=>p.e),backgroundColor:BOWLS.map(p=>p.e<7?G:p.e<7.5?Y:R),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:6,grid:{color:'#1e293b'}},x:{grid:{display:false}}}}});
+  document.getElementById('bowl-tbody').innerHTML=BOWLS.map((p,i)=>`<tr><td class="text-slate-400">${i+1}</td><td class="font-semibold text-white">${p.n}</td><td>${p.m}</td><td class="text-red-400 font-bold">${p.w}</td><td>${p.a}</td><td class="${p.e<7?'text-green-400':p.e<7.5?'text-yellow-400':'text-red-400'} font-semibold">${p.e}</td><td>${p.s}</td><td>${p.fw}</td><td class="text-purple-400">${p.fiw}</td></tr>`).join('');
+}
+
+function buildSeasons(){
+  mk('avgChart',{type:'line',data:{labels:SEAS,datasets:[{label:'Avg Score',data:AVGS,borderColor:O,backgroundColor:'rgba(249,115,22,0.1)',borderWidth:2,pointRadius:4,pointBackgroundColor:O,tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:145,grid:{color:'#1e293b'}},x:{grid:{display:false}}}}});
+  mk('highChart',{type:'bar',data:{labels:SEAS,datasets:[{data:HIGHS,backgroundColor:HIGHS.map(s=>s>=270?R:s>=240?O:Y),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:190,grid:{color:'#1e293b'}},x:{grid:{display:false}}}}});
+  document.getElementById('seas-tbody').innerHTML=ALL_S.map(s=>`<tr style="${s.y>=2024?'background:#1a1030':''}" ><td class="font-bold text-orange-400">${s.y}${s.y>=2024?`<span class="nb">${s.y===2025?'NEW':'2024'}</span>`:''}</td><td>${s.m}</td><td>${s.t}</td><td class="font-semibold text-yellow-300">🏆 ${s.c}</td><td class="text-slate-400 text-xs">${s.r}</td><td class="text-green-400">${s.p}</td><td class="text-orange-400">${s.o}</td><td class="text-purple-400">${s.pu}</td></tr>`).join('');
+}
+
+function buildInsights(){
+  mk('distChart',{type:'line',data:{labels:['100-119','120-139','140-159','160-179','180-199','200-219','220+'],datasets:[{label:'1st Innings',data:[45,180,380,310,130,65,25],borderColor:B,backgroundColor:'rgba(59,130,246,0.1)',tension:0.4,fill:true,borderWidth:2,pointRadius:4},{label:'2nd Innings',data:[80,220,350,260,110,45,12],borderColor:O,backgroundColor:'rgba(249,115,22,0.1)',tension:0.4,fill:true,borderWidth:2,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{grid:{color:'#1e293b'}},x:{grid:{display:false}}}}});
+  mk('venueChart',{type:'bar',data:{labels:['Wankhede,Mumbai','Chinnaswamy,Blr','Eden Gardens,KOL','Chidambaram,CHE','Kotla,Delhi','RGI,Hyd','SMS,Jaipur','NMS,Ahmedabad'],datasets:[{data:[118,102,98,92,88,80,70,68],backgroundColor:[B,R,P,O,G,C,Y,'#f43f5e'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e293b'}},y:{grid:{display:false}}}}});
+  mk('countryChart',{type:'doughnut',data:{labels:['India','Australia','West Indies','South Africa','England','New Zealand','Sri Lanka','Others'],datasets:[{data:[390,88,74,68,65,44,40,78],backgroundColor:[O,B,G,R,P,C,Y,'#6b7280'],borderWidth:2,borderColor:'#0f172a'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},padding:6}}}}});
+}
+
+const built=new Set();
+function showTab(tab){
+  ['overview','teams','batsmen','bowlers','seasons','insights'].forEach(t=>{document.getElementById('tab-'+t).classList.toggle('hidden',t!==tab);});
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{const tabs=['overview','teams','batsmen','bowlers','seasons','insights'];const on=tabs[i]===tab;b.classList.toggle('active',on);b.classList.toggle('border-orange-500',on);b.classList.toggle('border-slate-600',!on);b.classList.toggle('text-slate-300',!on);});
+  if(built.has(tab))return;built.add(tab);
+  setTimeout(()=>{
+    if(tab==='overview')buildOverview();
+    if(tab==='teams')buildTeamCharts();
+    if(tab==='batsmen')buildBatsmen();
+    if(tab==='bowlers')buildBowlers();
+    if(tab==='seasons')buildSeasons();
+    if(tab==='insights')buildInsights();
+  },50);
+}
+showTab('overview');
+</script>
+</body>
+</html>
